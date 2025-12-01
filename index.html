@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css"></link>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <link href='https://cdn.boxicons.com/3.0.5/fonts/basic/boxicons.min.css' rel='stylesheet'>
+    <link href='https://cdn.boxicons.com/3.0.5/fonts/brands/boxicons-brands.min.css' rel='stylesheet'>
+    <title>Music Search Engine</title>
+</head>
+<body class ="bg-stone-950 min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class = " bg-stone-900 shadow-xl h-full w-full p-2">
+        <h1 class="text-4xl text-center text-white mt-5 mb-5">
+        Music Search <i class='bx  bx-headphone-alt'></i> 
+        </h1>
+    </header>
+
+    <!-- Body -->
+    <main class="flex-grow">
+        <section class = 'grid grid-cols-3 gap-4  items-start m-4'>
+            
+         <div id ="search-container" class ="flex flex-col gap-4 col-span-3">
+         <div id="search-box" class="flex flex-col gap-4 bg-stone-900 shadow-xl/30 p-3 rounded-lg overflow-y-auto min-h-0">
+
+            <h1 class="text-2xl text-center text-white mt-1">
+        Artist Search <i class='bx  bx-disc'></i>    
+        </h1>
+        <!-- Search row -->
+        <div class="flex items-center gap-2">
+          <button id="search-button" class=" bg-stone-900 shadow-xl/75 hover:bg-gray-600 hover:scale-105 transition duration-300 text-white py-2 px-4 rounded-full flex items-center justify-center">
+            <i class='bx bx-search text-xl'></i>
+          </button>
+
+          <input type="search" placeholder="Search..." id="artist-search" class="flex-grow  bg-stone-900 shadow-xl/75 rounded-full p-2 text-white hover:bg-gray-600 hover:scale-101 transition duration-300" />
+
+          <button id="remove-search" class=" bg-stone-900 shadow-xl/75 hover:bg-gray-600 hover:scale-105 transition duration-300 text-white py-2 px-4 rounded-full flex items-center justify-center">
+            <i class='bx bx-x text-xl'></i>
+          </button>
+        </div>
+        
+
+        <!-- Artist list -->
+        <div id="artist-list" class="text-white">
+            <div id="loader1" class="hidden col-span-3 justify-center items-center py-10">
+                <div class="w-12 h-12 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+        </div>
+      </div>
+
+      <!-- Recent Searches-->
+       
+      <div id = "recent-searches" class =" flex flex-col gap-4 bg-stone-900 shadow-xl/30 p-3 rounded-lg overflow-y-auto min-h-0">
+        <div class="flex items-center gap-2">
+        <h1 class="text-l text-white">
+        Recent Searches  
+        </h1>
+        <button id="remove-recent-searches" class=" bg-stone-900 shadow-xl/75 hover:bg-gray-600 hover:scale-105 transition duration-300 text-white py-2 px-4 rounded-full flex items-center justify-center">
+            <i class='bx bx-x text-xl'></i>
+          </button>
+          </div>
+           <div class="flex flex-col gap-2 w-full">
+          <p id="recent-placeholder" class=" text-neutral-500 text-center">No recent searches</p>
+          <div id = "recent-list" class="flex flex-wrap gap-2" ></div>
+          </div>
+          
+      </div>
+    
+      
+      </div>
+
+        
+       <!-- Albums and music video list -->
+      <div id="album-box" class="hidden flex-col gap-4 bg-stone-900 shadow-xl/75 p-3 rounded-lg overflow-y-auto min-h-0">
+        
+        <h1 class="text-2xl text-center text-white mt-1">
+        Albums <i class='bx  bx-album-covers'></i>  
+        </h1>
+
+        <div id="loader2" class="hidden col-span-3 justify-center items-center py-10">
+            <div class="w-12 h-12 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+
+        <div id="album-list" class="grid grid-cols-4 gap-2 text-white"></div>
+
+        <h1 class="text-2xl text-center text-white mt-1">
+        Music Videos <i class='bx  bx-music-library'></i>
+        </h1>
+
+        <div id="music-videos"class="grid grid-cols-3 gap-2 text-white"></div>
+
+      </div>
+
+        <!--Song list -->
+
+      <div id="song-box" class="hidden flex-col bg-stone-900 shadow-xl/75 p-5 rounded-lg overflow-y-auto min-h-0">
+      
+        <h1 class="text-2xl text-center text-white mt-5 mb-5">
+        Track List <i class='bx  bx-list-music'></i> 
+        </h1>
+
+        <div id="loader3" class="hidden col-span-3 justify-center items-center py-10">
+            <div class="w-12 h-12 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+
+        <div id="song-list" class="grid grid-cols-1 text-white space-y-1"></div>
+
+      </div>
+
+    </section>
+
+    <!-- Tailwind CSS Modal-->
+<el-dialog>
+  <dialog id="dialog" aria-labelledby="dialog-title" class="fixed inset-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent">
+    <el-dialog-backdrop class="fixed inset-0 bg-gray-900/50 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"></el-dialog-backdrop>
+
+    <div tabindex="0" class="flex min-h-full items-end justify-center p-4 text-center focus:outline-none sm:items-center sm:p-0">
+      <el-dialog-panel class="relative transform overflow-hidden rounded-lg bg-gray-800 text-left shadow-xl outline -outline-offset-1 outline-white/10 transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95">
+
+
+        <div class="bg-stone-950 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-start">
+            <div class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-zinc-500/10 sm:mx-0 sm:size-10">
+              <i class='bx  bx-music-alt text-white text-2xl'></i> 
+            </div>
+
+            <div id ="modal-content" class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+          
+            </div>
+
+          </div>
+        </div>
+      
+        <div class="bg-stone-800 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+          <button id = "modal-button" type="button" command="close" commandfor="dialog" class="inline-flex w-full justify-center rounded-md bg-sky-900 px-3 py-2 text-sm font-semibold text-white hover:bg-sky-400 sm:ml-3 sm:w-auto">Close</button>
+        </div>
+        
+      </el-dialog-panel>
+    </div>
+  </dialog>
+</el-dialog>
+
+  </main>
+
+
+    <!-- Footer -->
+    <footer>
+        <section class = "bg-stone-900 shadow-xl h-full w-full p-2">
+            <h4 class="text-1xl text-center text-stone-400 mt-5 mb-5 " >Powered by iTunes API</h4>
+            <h4 class="text-1xl text-center text-stone-400 mt-5 mb-5 " >Jorge Garcilazo 2025</h4>
+        </section>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
